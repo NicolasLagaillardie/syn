@@ -277,3 +277,20 @@ macro_rules! bracketed {
         }
     };
 }
+
+/// Parse a group without delimiters and expose their content to subsequent
+/// parsers.
+#[macro_export]
+macro_rules! blanked {
+    ($content:ident in $cursor:expr) => {
+        match $crate::group::parse_group(&$cursor) {
+            $crate::export::Ok(blank) => {
+                $content = blank.content;
+                blank.token
+            }
+            $crate::export::Err(error) => {
+                return $crate::export::Err(error);
+            }
+        }
+    };
+}
